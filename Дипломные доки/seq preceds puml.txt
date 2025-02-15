@@ -1,0 +1,48 @@
+@startuml
+actor Player as "Игрок"
+participant Game as "Меню игры"
+participant "Игровой процесс" as TrainingLevel
+participant "Панель управлени в игре" as ControlPanel
+
+== Начало игры ==
+Player -> Game : Запуск игры
+Game -> Player : Отображение меню выбора уровня
+
+== Выбор уровня ==
+Player -> Game : Выбор уровня
+Game -> Player : Отображение выбранного уровня
+
+== Настройка уровня "Песочница" ==
+Player -> Game : Настройка параметров песочницы
+Game -> Player : Подтверждение настроек
+
+== Загрузка игры ==
+Player -> Game : Переход к  игре
+Game -> TrainingLevel : Загрузка игры
+TrainingLevel -> Player : Инструкции по управлению
+
+== Управление самолетами ==
+Player -> ControlPanel : Выбор рейса
+ControlPanel -> Player : Отображение информации о рейсе
+
+Player -> ControlPanel : Команда на взлет
+ControlPanel -> TrainingLevel : Выполнение команды на взлет
+TrainingLevel -> ControlPanel : Подтверждение взлета
+
+Player -> ControlPanel : Команда на изменение курса самолета
+ControlPanel -> TrainingLevel : Выполнение команды изменения курса
+TrainingLevel -> ControlPanel : Подтверждение выполнения команды
+
+Player -> ControlPanel : Команда на изменение высоты
+ControlPanel -> TrainingLevel : Изменение высоты самолета
+TrainingLevel -> ControlPanel : Подтверждение изменения высоты
+
+Player -> ControlPanel : Команда на посадку
+ControlPanel -> TrainingLevel : Выполнение команды на посадку
+TrainingLevel -> ControlPanel : Подтверждение посадки
+
+== Сохранение прогресса ==
+Player -> Game : Сохранение прогресса
+Game -> Player : Подтверждение сохранения
+
+@enduml

@@ -16,6 +16,8 @@ class PlaneEntity extends SpriteComponent with DragCallbacks {
   Vector2 velocity = Vector2.zero(); // Velocity for plane movement
   final Random random = Random(); // Random for direction
   bool isBeingDragged = false; // Track if plane is being dragged
+  double randomMoveDuration = 5.0; // Time in seconds for random movement
+  double timeUntilDirectionChange = 0.0;
 
   @override
   Future<void> onLoad() async {
@@ -63,10 +65,16 @@ class PlaneEntity extends SpriteComponent with DragCallbacks {
     super.update(dt);
 
     if (!isBeingDragged) {
-      // Update the position based on velocity (random movement)
+      // Update position based on velocity
       position += velocity * dt;
 
-      // When the plane reaches near the edge of the screen, change direction
+      // Reduce the time until the direction should change
+      timeUntilDirectionChange -= dt;
+      if (timeUntilDirectionChange <= 0) {
+        _setRandomVelocity();
+      }
+
+      // Ensure the plane stays within bounds by reversing direction if it reaches the edge
       if (position.x < 0 ||
           position.x > size.x ||
           position.y < 0 ||
@@ -90,11 +98,11 @@ class PlaneEntity extends SpriteComponent with DragCallbacks {
   }
 
   void _setRandomVelocity() {
-    // Set random velocity for random movement
+    // Set a random velocity for random movement and a random time for direction change
     double angle = random.nextDouble() * 2 * pi; // Random angle in radians
-    velocity = Vector2(cos(angle), sin(angle)) *
-        speed *
-        0.2; // Move in random direction slowly
+    velocity = Vector2(cos(angle), sin(angle)) * speed * 0.2;
+    timeUntilDirectionChange =
+        randomMoveDuration + random.nextDouble() * 2; // Vary movement duration
   }
 
   @override
@@ -112,9 +120,9 @@ class PlaneEntity extends SpriteComponent with DragCallbacks {
 
   @override
   void onDragEnd(DragEndEvent event) {
-    // Revert to random movement when drag ends
+    // After drag ends, move toward the last dragged position, then resume random movement
     isBeingDragged = false;
-    _setRandomVelocity(); // Resume random movement
+    _setRandomVelocity(); // Resume random movement after reaching the final drag point
   }
 
   @override
@@ -122,5 +130,10 @@ class PlaneEntity extends SpriteComponent with DragCallbacks {
     // Handle when drag is canceled
     isBeingDragged = false;
     _setRandomVelocity(); // Resume random movement
+  }
+
+  // Convert the plane to a rectangle (bounding box) for collision detection
+  Rect toRect() {
+    return Rect.fromLTWH(position.x, position.y, size.x, size.y);
   }
 }

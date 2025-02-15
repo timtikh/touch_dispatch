@@ -1,15 +1,29 @@
 import 'package:flame/components.dart';
-import 'package:flame/events.dart';
 import 'package:flame/game.dart';
-import 'package:flame/input.dart';
+import 'package:flutter/material.dart';
 import '../components/runway.dart';
 import '../components/plane.dart';
+import 'dart:async';
+import 'package:flame/components.dart';
+import 'package:flame/game.dart';
+import 'package:flutter/material.dart';
+import '../components/runway.dart';
+import '../components/plane.dart';
+import 'dart:async';
+import 'package:flame/components.dart';
+import 'package:flame/game.dart';
+import '../components/runway.dart';
+import '../components/plane.dart';
+import 'dart:async';
 
 class TouchDispatchGame extends FlameGame {
   late Runway runway;
   double spawnRate = 10.0;
   double spawnTimer = 0.0;
-  List<PlaneEntity> planes = []; // List to store planes
+  ValueNotifier<List<PlaneEntity>> planesNotifier =
+      ValueNotifier([]); // ValueNotifier for planes
+
+  bool isPaused = false; // Track if the game is paused
 
   @override
   Future<void> onLoad() async {
@@ -21,15 +35,18 @@ class TouchDispatchGame extends FlameGame {
 
   @override
   void update(double dt) {
-    super.update(dt);
-    spawnTimer += dt;
+    if (!isPaused) {
+      super.update(dt);
+      spawnTimer += dt;
 
-    if (spawnTimer >= spawnRate) {
-      spawnTimer = 0;
-      spawnPlane();
+      if (spawnTimer >= spawnRate) {
+        spawnTimer = 0;
+        spawnPlane();
+      }
+
+      // Check for collisions between planes and the runway
+      checkPlaneRunwayCollisions();
     }
-
-    // Planes will move based on their own target positions
   }
 
   Future<void> spawnPlane() async {
@@ -41,7 +58,46 @@ class TouchDispatchGame extends FlameGame {
       ..flightNumber = 'Flight ${DateTime.now().millisecondsSinceEpoch % 1000}'
       ..height = 10000; // Default height
 
-    planes.add(plane); // Add the plane to the list of planes
+    planesNotifier.value = List.from(planesNotifier.value)
+      ..add(plane); // Notify planes change
     add(plane);
+  }
+
+  // Check if any plane is flying over the runway
+  void checkPlaneRunwayCollisions() {
+    for (final plane in planesNotifier.value) {
+      if (plane.toRect().overlaps(runway.toRect())) {
+        // Remove the plane from the game if it collides with the runway
+        removePlane(plane);
+      }
+    }
+  }
+
+  void removePlane(PlaneEntity plane) {
+    planesNotifier.value = List.from(planesNotifier.value)
+      ..remove(plane); // Update notifier
+    plane.removeFromParent(); // Remove the plane from the game
+  }
+
+  // Pause the game logic
+  void pauseGame() {
+    isPaused = true;
+    pauseEngine();
+  }
+
+  // Resume the game logic
+  void resumeGame() {
+    isPaused = false;
+    resumeEngine();
+  }
+
+  // Get a list of widgets displaying the flight information for the HUD
+  List<Widget> getFlightInfoWidgets() {
+    return planesNotifier.value.map((plane) {
+      return ListTile(
+        title: Text(plane.flightNumber),
+        subtitle: Text('Height: ${plane.height.toStringAsFixed(0)} ft'),
+      );
+    }).toList();
   }
 }
