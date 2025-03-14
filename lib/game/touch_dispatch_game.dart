@@ -1,35 +1,22 @@
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-import '../components/runway.dart';
-import '../components/plane.dart';
 import 'dart:async';
-import 'package:flame/components.dart';
-import 'package:flame/game.dart';
-import 'package:flutter/material.dart';
-import '../components/runway.dart';
-import '../components/plane.dart';
-import 'dart:async';
-import 'package:flame/components.dart';
-import 'package:flame/game.dart';
-import '../components/runway.dart';
-import '../components/plane.dart';
-import 'dart:async';
+import 'components/plane/plane.dart';
+import 'components/game_map.dart';
 
 class TouchDispatchGame extends FlameGame {
-  late Runway runway;
+  late GameMap gameMap;
   double spawnRate = 10.0;
   double spawnTimer = 0.0;
-  ValueNotifier<List<PlaneEntity>> planesNotifier =
-      ValueNotifier([]); // ValueNotifier for planes
-
-  bool isPaused = false; // Track if the game is paused
+  ValueNotifier<List<PlaneEntity>> planesNotifier = ValueNotifier([]);
+  bool isPaused = false;
 
   @override
   Future<void> onLoad() async {
     super.onLoad();
-    runway = Runway();
-    add(runway);
+    gameMap = GameMap();
+    add(gameMap);
     spawnPlane();
   }
 
@@ -44,7 +31,6 @@ class TouchDispatchGame extends FlameGame {
         spawnPlane();
       }
 
-      // Check for collisions between planes and the runway
       checkPlaneRunwayCollisions();
     }
   }
@@ -56,42 +42,36 @@ class TouchDispatchGame extends FlameGame {
       ..position = Vector2(50, 50)
       ..size = Vector2(50, 50)
       ..flightNumber = 'Flight ${DateTime.now().millisecondsSinceEpoch % 1000}'
-      ..height = 10000; // Default height
+      ..height = 10000;
 
-    planesNotifier.value = List.from(planesNotifier.value)
-      ..add(plane); // Notify planes change
+    planesNotifier.value = List.from(planesNotifier.value)..add(plane);
     add(plane);
+
   }
 
-  // Check if any plane is flying over the runway
   void checkPlaneRunwayCollisions() {
     for (final plane in planesNotifier.value) {
-      if (plane.toRect().overlaps(runway.toRect())) {
-        // Remove the plane from the game if it collides with the runway
+      if (plane.toRect().overlaps(gameMap.runway.toRect())) {
         removePlane(plane);
       }
     }
   }
 
   void removePlane(PlaneEntity plane) {
-    planesNotifier.value = List.from(planesNotifier.value)
-      ..remove(plane); // Update notifier
-    plane.removeFromParent(); // Remove the plane from the game
+    planesNotifier.value = List.from(planesNotifier.value)..remove(plane);
+    plane.removeFromParent();
   }
 
-  // Pause the game logic
   void pauseGame() {
     isPaused = true;
     pauseEngine();
   }
 
-  // Resume the game logic
   void resumeGame() {
     isPaused = false;
     resumeEngine();
   }
 
-  // Get a list of widgets displaying the flight information for the HUD
   List<Widget> getFlightInfoWidgets() {
     return planesNotifier.value.map((plane) {
       return ListTile(
