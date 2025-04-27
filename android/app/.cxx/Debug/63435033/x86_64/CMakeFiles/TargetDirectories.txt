@@ -1,0 +1,2 @@
+/Users/timtikh/StudioProjects/touch_dispatch/android/app/.cxx/Debug/63435033/x86_64/CMakeFiles/edit_cache.dir
+/Users/timtikh/StudioProjects/touch_dispatch/android/app/.cxx/Debug/63435033/x86_64/CMakeFiles/rebuild_cache.dir

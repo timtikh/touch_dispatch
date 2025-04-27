@@ -3,7 +3,7 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'components/plane/plane.dart';
-import 'components/game_map.dart';
+import 'components/map/game_map.dart';
 
 class TouchDispatchGame extends FlameGame {
   late GameMap gameMap;

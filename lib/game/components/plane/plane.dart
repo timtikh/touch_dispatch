@@ -1,11 +1,10 @@
 import 'dart:ui';
 import 'dart:math';
-import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flutter/material.dart';
 
-import '../point_entity.dart';
+import '../map/point_entity.dart';
 
 class PlaneEntity extends SpriteComponent with DragCallbacks {
   final double speed = 100;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:touch_dispatch/game/pause_overlay.dart';
 import 'package:touch_dispatch/game/touch_dispatch_game.dart';
 
 
@@ -10,33 +11,12 @@ class GameOverlay extends StatefulWidget {
   @override
   _GameOverlayState createState() => _GameOverlayState();
 }
-
 class _GameOverlayState extends State<GameOverlay> {
-  @override
-  void initState() {
-    super.initState();
-
-    // Listen for changes in the planesNotifier to trigger updates in the overlay
-    widget.game.planesNotifier.addListener(_onPlanesChanged);
-  }
-
-  @override
-  void dispose() {
-    // Remove listener when the widget is disposed
-    widget.game.planesNotifier.removeListener(_onPlanesChanged);
-    super.dispose();
-  }
-
-  void _onPlanesChanged() {
-    setState(() {
-      // The setState call here ensures the overlay is rebuilt when planes update
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
+        // Game info panel
         Align(
           alignment: Alignment.bottomRight,
           child: Container(
@@ -65,6 +45,7 @@ class _GameOverlayState extends State<GameOverlay> {
             ),
           ),
         ),
+        // Pause button
         Align(
           alignment: Alignment.topRight,
           child: Padding(
@@ -76,17 +57,19 @@ class _GameOverlayState extends State<GameOverlay> {
                 } else {
                   widget.game.pauseGame();
                 }
-                setState(() {}); // Rebuild the button to show play/pause icon
+                setState(() {});
               },
-              child:
-                  Icon(widget.game.isPaused ? Icons.play_arrow : Icons.pause),
+              child: Icon(widget.game.isPaused ? Icons.play_arrow : Icons.pause),
               style: ElevatedButton.styleFrom(
-                shape: CircleBorder(), backgroundColor: Colors.red,
-                padding: EdgeInsets.all(20), // Background color
+                shape: CircleBorder(),
+                backgroundColor: Colors.blueAccent,
+                padding: EdgeInsets.all(20),
               ),
             ),
           ),
         ),
+        // Pause menu overlay
+        if (widget.game.isPaused) PauseMenuOverlay(game: widget.game),
       ],
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:touch_dispatch/level_selection_menu.dart';
 import 'game/game_page.dart';
 
 class MenuScreen extends StatelessWidget {
@@ -17,7 +18,7 @@ class MenuScreen extends StatelessWidget {
                 // Go to the game screen
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => GamePage()),
+                  MaterialPageRoute(builder: (context) => LevelSelectionMenu()),
                 );
               },
               child: Text('Start Game'),
@@ -27,13 +28,6 @@ class MenuScreen extends StatelessWidget {
                 // Navigate to settings screen (to be implemented)
               },
               child: Text('Settings'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                // Exit the app
-                Navigator.pop(context);
-              },
-              child: Text('Exit'),
             ),
           ],
         ),
