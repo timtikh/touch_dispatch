@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'game/game_page.dart';
+import '../game/game_page.dart';
 
 class LevelData {
   final String name;

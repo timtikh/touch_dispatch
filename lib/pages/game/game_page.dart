@@ -1,9 +1,9 @@
 
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-import 'game_overlay.dart';
-import 'touch_dispatch_game.dart';
-import '../main.dart'; // Import the main file to navigate to the game screen
+import 'overlays/game_overlay.dart';
+import 'game_logic/touch_dispatch_game.dart';
+
 class GamePage extends StatelessWidget {
   final double spawnRate;
 

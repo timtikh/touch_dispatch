@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:touch_dispatch/game/pause_overlay.dart';
-import 'package:touch_dispatch/game/touch_dispatch_game.dart';
-
+import 'package:touch_dispatch/pages/game/overlays/pause_overlay.dart';
+import 'package:touch_dispatch/pages/game/game_logic/touch_dispatch_game.dart';
 
 class GameOverlay extends StatefulWidget {
   final TouchDispatchGame game;
@@ -16,7 +15,7 @@ class _GameOverlayState extends State<GameOverlay> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // Game info panel
+        // Game info panel TODO: ADD PROPER STATEMANAGER
         Align(
           alignment: Alignment.bottomRight,
           child: Container(

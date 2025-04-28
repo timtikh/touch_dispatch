@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:touch_dispatch/game/touch_dispatch_game.dart';
-
-
+import 'package:touch_dispatch/pages/game/game_logic/touch_dispatch_game.dart';
 
 class PauseMenuOverlay extends StatelessWidget {
   final TouchDispatchGame game;

@@ -152,38 +152,48 @@ class PlaneEntity extends SpriteComponent with DragCallbacks {
     targetPoint = point;
   }
 
+
   @override
   void onDragStart(DragStartEvent event) {
     super.onDragStart(event);
-    // Calculate delta between touch point and current position
-    dragDelta = event.localPosition;
+
     isBeingDragged = true;
     dragPath = Path();
-    dragPath.moveTo(event.canvasPosition.x, event.canvasPosition.y);
+
+    final pos = position + event.canvasPosition - (absolutePosition - size / 2);
+    dragPath.relativeMoveTo(pos.x, pos.y);
+
     pathPoints.clear();
-    pathPoints.add(event.canvasPosition.clone());
+    pathPoints.add(pos.clone());
+
     currentPathIndex = 0;
     isFollowingPath = false;
   }
 
+
   @override
   void onDragUpdate(DragUpdateEvent event) {
-    // Use canvas position for actual movement
-    targetPosition = event.canvasPosition - dragDelta;
-    dragPath.lineTo(event.canvasPosition.x, event.canvasPosition.y);
-    if (pathPoints.isEmpty ||
-        pathPoints.last.distanceTo(event.canvasPosition) > 10) {
-      pathPoints.add(event.canvasPosition.clone());
+    super.onDragUpdate(event);
+
+    final pos = event.canvasStartPosition - (absolutePosition - size / 2);
+    dragPath.lineTo(pos.x, pos.y);
+
+    if (pathPoints.isEmpty || pathPoints.last.distanceTo(pos) > 10) {
+      pathPoints.add(pos.clone());
     }
   }
 
-  // Update onDragEnd to start path following
+
+
   @override
   void onDragEnd(DragEndEvent event) {
     super.onDragEnd(event);
     isBeingDragged = false;
-    isFollowingPath = true;
-    currentPathIndex = 0;
+    if (pathPoints.length > 1) {
+      isFollowingPath = true;
+      currentPathIndex = 0;
+      _createDashedPath();
+    }
   }
 
 

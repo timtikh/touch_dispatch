@@ -1,11 +1,11 @@
-import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'components/plane/plane.dart';
-import 'components/map/game_map.dart';
+import '../components/plane/plane.dart';
+import '../components/map/game_map.dart';
 
 class TouchDispatchGame extends FlameGame {
+
   late GameMap gameMap;
   double spawnRate = 10.0;
   double spawnTimer = 0.0;

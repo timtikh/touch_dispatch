@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:touch_dispatch/level_selection_menu.dart';
-import 'game/game_page.dart';
+import 'package:touch_dispatch/pages/level_selection_menu/level_selection_menu.dart';
 
-class MenuScreen extends StatelessWidget {
+class MenuPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
