@@ -160,8 +160,7 @@ class PlaneEntity extends SpriteComponent with DragCallbacks {
     isBeingDragged = true;
     dragPath = Path();
 
-    final pos = position + event.canvasPosition - (absolutePosition - size / 2);
-    dragPath.relativeMoveTo(pos.x, pos.y);
+    final pos = absolutePosition;
 
     pathPoints.clear();
     pathPoints.add(pos.clone());
@@ -175,7 +174,7 @@ class PlaneEntity extends SpriteComponent with DragCallbacks {
   void onDragUpdate(DragUpdateEvent event) {
     super.onDragUpdate(event);
 
-    final pos = event.canvasStartPosition - (absolutePosition - size / 2);
+    final pos = event.canvasStartPosition;
     dragPath.lineTo(pos.x, pos.y);
 
     if (pathPoints.isEmpty || pathPoints.last.distanceTo(pos) > 10) {

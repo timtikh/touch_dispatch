@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:touch_dispatch/pages/game/overlays/pause_overlay.dart';
 import 'package:touch_dispatch/pages/game/game_logic/touch_dispatch_game.dart';
 
-class GameOverlay extends StatefulWidget {
+import '../state_managment/game_bloc.dart';
+import '../state_managment/game_state.dart';
+
+class GameOverlay extends StatelessWidget {
   final TouchDispatchGame game;
 
-  const GameOverlay({required this.game});
+  const GameOverlay({required this.game, super.key});
 
-  @override
-  _GameOverlayState createState() => _GameOverlayState();
-}
-class _GameOverlayState extends State<GameOverlay> {
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // Game info panel TODO: ADD PROPER STATEMANAGER
+        // Flight info panel
         Align(
           alignment: Alignment.bottomRight,
           child: Container(
@@ -28,16 +28,31 @@ class _GameOverlayState extends State<GameOverlay> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
                   child: Text(
                     'Flights Info',
                     style: TextStyle(color: Colors.white, fontSize: 18),
                   ),
                 ),
                 Expanded(
-                  child: ListView(
-                    children: widget.game.getFlightInfoWidgets(),
+                  child: BlocBuilder<GameBloc, GameState>(
+                    builder: (context, state) {
+                      return ListView(
+                        children: state.planes.map((plane) {
+                          return ListTile(
+                            title: Text(
+                              plane.flightNumber,
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                            subtitle: Text(
+                              'Height: ${plane.height.toStringAsFixed(0)} ft',
+                              style: const TextStyle(color: Colors.white70),
+                            ),
+                          );
+                        }).toList(),
+                      );
+                    },
                   ),
                 ),
               ],
@@ -49,26 +64,38 @@ class _GameOverlayState extends State<GameOverlay> {
           alignment: Alignment.topRight,
           child: Padding(
             padding: const EdgeInsets.all(20.0),
-            child: ElevatedButton(
-              onPressed: () {
-                if (widget.game.isPaused) {
-                  widget.game.resumeGame();
-                } else {
-                  widget.game.pauseGame();
-                }
-                setState(() {});
+            child: BlocBuilder<GameBloc, GameState>(
+              builder: (context, state) {
+                return ElevatedButton(
+                  onPressed: () {
+                    if (state.isPaused) {
+                      game.resumeGame();
+                    } else {
+                      game.pauseGame();
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    shape: const CircleBorder(),
+                    backgroundColor: Colors.blueAccent,
+                    padding: const EdgeInsets.all(20),
+                  ),
+                  child: Icon(
+                    state.isPaused ? Icons.play_arrow : Icons.pause,
+                  ),
+                );
               },
-              child: Icon(widget.game.isPaused ? Icons.play_arrow : Icons.pause),
-              style: ElevatedButton.styleFrom(
-                shape: CircleBorder(),
-                backgroundColor: Colors.blueAccent,
-                padding: EdgeInsets.all(20),
-              ),
             ),
           ),
         ),
-        // Pause menu overlay
-        if (widget.game.isPaused) PauseMenuOverlay(game: widget.game),
+        // Pause overlay
+        BlocBuilder<GameBloc, GameState>(
+          builder: (context, state) {
+            if (state.isPaused) {
+              return PauseMenuOverlay(game: game);
+            }
+            return const SizedBox.shrink();
+          },
+        ),
       ],
     );
   }

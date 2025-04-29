@@ -3,14 +3,17 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import '../components/plane/plane.dart';
 import '../components/map/game_map.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../state_managment/game_bloc.dart';
+import '../state_managment/game_event.dart';
 
 class TouchDispatchGame extends FlameGame {
+  final GameBloc bloc;
+  TouchDispatchGame(this.bloc);
 
   late GameMap gameMap;
   double spawnRate = 10.0;
   double spawnTimer = 0.0;
-  ValueNotifier<List<PlaneEntity>> planesNotifier = ValueNotifier([]);
-  bool isPaused = false;
 
   @override
   Future<void> onLoad() async {
@@ -22,7 +25,7 @@ class TouchDispatchGame extends FlameGame {
 
   @override
   void update(double dt) {
-    if (!isPaused) {
+    if (!bloc.state.isPaused) {
       super.update(dt);
       spawnTimer += dt;
 
@@ -44,13 +47,12 @@ class TouchDispatchGame extends FlameGame {
       ..flightNumber = 'Flight ${DateTime.now().millisecondsSinceEpoch % 1000}'
       ..height = 10000;
 
-    planesNotifier.value = List.from(planesNotifier.value)..add(plane);
+    bloc.add(AddPlaneEvent(plane));
     add(plane);
-
   }
 
   void checkPlaneRunwayCollisions() {
-    for (final plane in planesNotifier.value) {
+    for (final plane in bloc.state.planes) {
       if (plane.toRect().overlaps(gameMap.runway.toRect())) {
         removePlane(plane);
       }
@@ -58,26 +60,10 @@ class TouchDispatchGame extends FlameGame {
   }
 
   void removePlane(PlaneEntity plane) {
-    planesNotifier.value = List.from(planesNotifier.value)..remove(plane);
+    bloc.add(RemovePlaneEvent(plane));
     plane.removeFromParent();
   }
 
-  void pauseGame() {
-    isPaused = true;
-    pauseEngine();
-  }
-
-  void resumeGame() {
-    isPaused = false;
-    resumeEngine();
-  }
-
-  List<Widget> getFlightInfoWidgets() {
-    return planesNotifier.value.map((plane) {
-      return ListTile(
-        title: Text(plane.flightNumber),
-        subtitle: Text('Height: ${plane.height.toStringAsFixed(0)} ft'),
-      );
-    }).toList();
-  }
+  void pauseGame() => bloc.add(PauseGameEvent());
+  void resumeGame() => bloc.add(ResumeGameEvent());
 }
