@@ -17,7 +17,7 @@ class GameOverlay extends StatelessWidget {
       children: [
         // Flight info panel
         Align(
-          alignment: Alignment.bottomRight,
+          alignment: Alignment.topRight,
           child: Container(
             width: 200,
             height: 300,
@@ -45,10 +45,15 @@ class GameOverlay extends StatelessWidget {
                               plane.flightNumber,
                               style: const TextStyle(color: Colors.white),
                             ),
-                            subtitle: Text(
-                              'Height: ${plane.height.toStringAsFixed(0)} ft',
-                              style: const TextStyle(color: Colors.white70),
-                            ),
+                            subtitle: ValueListenableBuilder<double>(
+                              valueListenable: plane.heightNotifier,
+                              builder: (_, height, __) {
+                                return Text(
+                                  'Height: ${height.toStringAsFixed(0)} ft',
+                                  style: const TextStyle(color: Colors.white70),
+                                );
+                              },
+                            )
                           );
                         }).toList(),
                       );

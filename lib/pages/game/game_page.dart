@@ -21,10 +21,10 @@ class GamePage extends StatelessWidget {
         BlocProvider<GameBloc>.value(value: gameBloc),
       ],
       child: Scaffold(
-        body: Stack(
+        body: Row(
           children: [
-            GameWidget(game: game),
-            GameOverlay(game: game),
+            Expanded(child: GameWidget(game: game)), // game fills available space
+            GameOverlay(game: game), // shown below the game
           ],
         ),
       ),

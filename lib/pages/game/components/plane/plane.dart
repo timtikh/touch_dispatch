@@ -12,13 +12,17 @@ class PlaneEntity extends SpriteComponent with DragCallbacks {
   late TextComponent heightText;
   String flightNumber = 'Flight 123';
   double height = 10000;
+  final ValueNotifier<double> heightNotifier = ValueNotifier(10000);
+
+
+
   Vector2 dragDelta = Vector2.zero();
   late Sprite planeSprite;
   Vector2 targetPosition = Vector2.zero();
   Vector2 velocity = Vector2.zero();
   final Random random = Random();
   bool isBeingDragged = false;
-  double randomMoveDuration = 5.0;
+  double randomMoveDuration = 10.0;
   double timeUntilDirectionChange = 0.0;
   Path dragPath = Path();
   PointEntity? targetPoint;
@@ -66,20 +70,21 @@ class PlaneEntity extends SpriteComponent with DragCallbacks {
   }
 
 
-
   @override
   Future<void> onLoad() async {
+    await super.onLoad();
+
     size = Vector2(50, 50);
     targetPosition = position;
 
     flightText = TextComponent(
       text: flightNumber,
-      position: position + Vector2(-20, -70),
       anchor: Anchor.center,
+      position: Vector2(size.x / 2, -20),
       textRenderer: TextPaint(
         style: const TextStyle(
           color: Colors.white,
-          fontSize: 14,
+          fontSize: 12,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -88,21 +93,20 @@ class PlaneEntity extends SpriteComponent with DragCallbacks {
 
     heightText = TextComponent(
       text: 'Height: ${height.toStringAsFixed(0)} ft',
-      position: position + Vector2(-20, 20),
       anchor: Anchor.center,
+      position: Vector2(size.x / 2, size.y + 10),
       textRenderer: TextPaint(
         style: const TextStyle(
           color: Colors.white,
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
+          fontSize: 12,
         ),
       ),
     );
     add(heightText);
 
-
     _setRandomVelocity();
   }
+
 
   @override
   void update(double dt) {
@@ -136,7 +140,8 @@ class PlaneEntity extends SpriteComponent with DragCallbacks {
       }
     }
 
-    //height -= 10 * dt;
+    height -= 10 * dt;
+    heightNotifier.value = height;
     heightText.text = 'Height: ${height.toStringAsFixed(0)} ft';
   }
 

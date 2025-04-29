@@ -151,9 +151,9 @@ class _LevelSelectionMenuState extends State<LevelSelectionMenu> {
             SizedBox(height: 8),
             Slider(
               value: _customSpawnRate,
-              min: 1.0,
+              min: 0.1,
               max: 20.0,
-              divisions: 19,
+              divisions: 100,
               label: _customSpawnRate.toStringAsFixed(1),
               onChanged: (value) {
                 setState(() {
