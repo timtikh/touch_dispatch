@@ -9,6 +9,8 @@ class PauseMenuOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: 312,
+      height: 900,
       color: Colors.black54,
       child: Center(
         child: Card(

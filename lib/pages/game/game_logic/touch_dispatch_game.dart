@@ -65,12 +65,19 @@ class TouchDispatchGame extends FlameGame {
 
   Future<void> spawnPlane() async {
     final planeSprite = await loadSprite('plane_colored.png');
+
+    final centerPos = gameMap.size / 2;
+
     final plane = PlaneEntity()
       ..sprite = planeSprite
       ..position = _getRandomCornerPosition()
       ..size = Vector2(50, 50)
       ..flightNumber = 'Flight ${DateTime.now().millisecondsSinceEpoch % 1000}'
       ..height = 10000;
+
+
+    plane.moveToPoint(centerPos);
+
 
     bloc.add(AddPlaneEvent(plane));
     add(plane);

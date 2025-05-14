@@ -9,6 +9,8 @@ class GameOverOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: 312,
+      height: 900,
       color: Colors.black87.withOpacity(0.85),
       child: Center(
         child: IntrinsicWidth(

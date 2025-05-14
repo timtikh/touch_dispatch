@@ -14,10 +14,7 @@ class PlaneEntity extends SpriteComponent with DragCallbacks {
   double height = 10000;
   final ValueNotifier<double> heightNotifier = ValueNotifier(10000);
   final ValueNotifier<double> orderedHeightNotifier = ValueNotifier(10000);
-
   Vector2 get direction => velocity.normalized();
-
-
 
   Vector2 dragDelta = Vector2.zero();
   late Sprite planeSprite;
@@ -26,7 +23,8 @@ class PlaneEntity extends SpriteComponent with DragCallbacks {
 
   final Random random = Random();
   bool isBeingDragged = false;
-  double randomMoveDuration = 10.0;
+  bool isMovingTowardsSmth = false;
+  double randomMoveDuration = 30.0;
   double timeUntilDirectionChange = 0.0;
   Path dragPath = Path();
   PointEntity? targetPoint;
@@ -111,7 +109,7 @@ class PlaneEntity extends SpriteComponent with DragCallbacks {
     );
     add(heightText);
 
-    _setRandomVelocity();
+    //_setRandomVelocity();
   }
 
 
@@ -130,7 +128,7 @@ class PlaneEntity extends SpriteComponent with DragCallbacks {
         Vector2 direction = target - position;
 
         if (direction.length > 5) {
-          velocity = direction.normalized() * speed;
+          velocity = direction.normalized() * speed * 0.4;
           position += velocity * dt / 2;
           //angle = velocity.angleTo(Vector2(1, 0)); // ← rotate sprite
         } else {
@@ -140,7 +138,10 @@ class PlaneEntity extends SpriteComponent with DragCallbacks {
         isFollowingPath = false;
         _setRandomVelocity();
       }
-    } else if (!isBeingDragged) {
+    } else if (isMovingTowardsSmth) {
+      position += velocity * dt;
+    }
+    else if (!isBeingDragged) {
       position += velocity * dt;
       //angle = velocity.angleTo(Vector2(1, 0)); // ← rotate sprite
       timeUntilDirectionChange -= dt;
@@ -161,17 +162,29 @@ class PlaneEntity extends SpriteComponent with DragCallbacks {
     heightText.text = 'Height: ${height.toStringAsFixed(0)} ft';
   }
 
-
-
+// Replace _setRandomVelocity
   void _setRandomVelocity() {
-    double angle = random.nextDouble() * 2 * pi;
-    velocity = Vector2(cos(angle), sin(angle)) * speed * 0.2;
     timeUntilDirectionChange = randomMoveDuration + random.nextDouble() * 2;
+    double angle = random.nextDouble() * 2 * pi;
+    moveInDirection(Vector2(cos(angle), sin(angle)));
   }
 
-  void setTargetPoint(PointEntity point) {
-    targetPoint = point;
+// New method to follow a fixed direction
+  void moveInDirection(Vector2 dir) {
+    velocity = dir.normalized() * speed * 0.2;
+    isFollowingPath = false;
+    targetPoint = null;
   }
+
+  void moveToPoint(Vector2 point) {
+    targetPosition = point;
+    isMovingTowardsSmth = true;
+    final delta = point - position;
+    final angle = atan2(delta.y, delta.x);
+    moveInDirection(Vector2(cos(angle), sin(angle)));
+  }
+
+
 
 
   @override

@@ -3,8 +3,15 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 
 class PointEntity extends PositionComponent {
-  late TextComponent flightText;
-  static const List<String> pointNames = ['GPK', 'ABC', 'XYZ', 'LMN', 'DEF'];
+  late TextComponent nameText;
+  static const List<String> pointNames = [
+    'GPK', 'ABC', 'XYZ', 'LMN', 'DEF',
+    'TRQ', 'HJK', 'BWN', 'ZMT', 'PKR',
+    'SXD', 'JVL', 'MRQ', 'ENY', 'VCT',
+    'DPL', 'QEX', 'TBR', 'WAZ', 'FNH',
+    'UVO', 'CKM', 'RYT', 'XPL', 'NEQ',
+    'AGL', 'OBX', 'KMI', 'ZRF', 'HTQ'
+  ];
   final Random random = Random();
 
   PointEntity({required Vector2 position}) {
@@ -15,7 +22,7 @@ class PointEntity extends PositionComponent {
     String pointName = pointNames[random.nextInt(pointNames.length)];
 
     // Add text component
-    flightText = TextComponent(
+    nameText = TextComponent(
       text: pointName,
       position: Vector2(size.x / 2, size.y / 2 + 20), // Center the text
       anchor: Anchor.center,
@@ -27,7 +34,7 @@ class PointEntity extends PositionComponent {
         ),
       ),
     );
-    add(flightText);
+    add(nameText);
   }
 
   @override
