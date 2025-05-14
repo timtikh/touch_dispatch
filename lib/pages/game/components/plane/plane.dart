@@ -3,10 +3,11 @@ import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flutter/material.dart';
+import 'package:touch_dispatch/pages/game/components/plane/plane_sprite.dart';
 
 import '../map/point_entity.dart';
 
-class PlaneEntity extends SpriteComponent with DragCallbacks {
+class PlaneEntity extends PositionComponent with DragCallbacks {
   final double speed = 100;
   late TextComponent flightText;
   late TextComponent heightText;
@@ -17,7 +18,7 @@ class PlaneEntity extends SpriteComponent with DragCallbacks {
   Vector2 get direction => velocity.normalized();
 
   Vector2 dragDelta = Vector2.zero();
-  late Sprite planeSprite;
+  late PlaneSprite planeSprite;
   Vector2 targetPosition = Vector2.zero();
   Vector2 velocity = Vector2.zero();
 
@@ -76,6 +77,8 @@ class PlaneEntity extends SpriteComponent with DragCallbacks {
   Future<void> onLoad() async {
     await super.onLoad();
 
+    add(planeSprite); // Add sprite as a child
+
     size = Vector2(50, 50);
     targetPosition = position;
 
@@ -85,7 +88,7 @@ class PlaneEntity extends SpriteComponent with DragCallbacks {
     flightText = TextComponent(
       text: flightNumber,
       anchor: Anchor.center,
-      position: Vector2(size.x / 2, -20),
+      position: Vector2(0, -20),
       textRenderer: TextPaint(
         style: const TextStyle(
           color: Colors.white,
@@ -99,7 +102,7 @@ class PlaneEntity extends SpriteComponent with DragCallbacks {
     heightText = TextComponent(
       text: 'Height: ${height.toStringAsFixed(0)} ft',
       anchor: Anchor.center,
-      position: Vector2(size.x / 2, size.y + 10),
+      position: Vector2(0, 20),
       textRenderer: TextPaint(
         style: const TextStyle(
           color: Colors.white,
@@ -116,6 +119,7 @@ class PlaneEntity extends SpriteComponent with DragCallbacks {
   @override
   void update(double dt) {
     super.update(dt);
+    planeSprite.updateDirection(velocity);
 
     if (isFollowingPath && pathPoints.isNotEmpty) {
       while (currentPathIndex > 0 && pathPoints.isNotEmpty) {
@@ -129,8 +133,8 @@ class PlaneEntity extends SpriteComponent with DragCallbacks {
 
         if (direction.length > 5) {
           velocity = direction.normalized() * speed * 0.4;
+
           position += velocity * dt / 2;
-          //angle = velocity.angleTo(Vector2(1, 0)); // ← rotate sprite
         } else {
           currentPathIndex++;
         }
@@ -143,7 +147,6 @@ class PlaneEntity extends SpriteComponent with DragCallbacks {
     }
     else if (!isBeingDragged) {
       position += velocity * dt;
-      //angle = velocity.angleTo(Vector2(1, 0)); // ← rotate sprite
       timeUntilDirectionChange -= dt;
       if (timeUntilDirectionChange <= 0) {
         _setRandomVelocity();

@@ -19,5 +19,6 @@ dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - assets/images/plane.png
     - assets/images/plane_colored.png
     - assets/images/runway.png

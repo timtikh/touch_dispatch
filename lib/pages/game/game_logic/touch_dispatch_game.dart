@@ -4,6 +4,7 @@ import 'dart:async';
 import '../components/plane/plane.dart';
 import '../components/map/game_map.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../components/plane/plane_sprite.dart';
 import '../state_managment/game_bloc.dart';
 import '../state_managment/game_event.dart';
 import 'dart:math';
@@ -64,14 +65,14 @@ class TouchDispatchGame extends FlameGame {
 
 
   Future<void> spawnPlane() async {
-    final planeSprite = await loadSprite('plane_colored.png');
+    final planeSprite = await loadSprite('plane.png');
 
     final centerPos = gameMap.size / 2;
 
     final plane = PlaneEntity()
-      ..sprite = planeSprite
+      ..planeSprite = PlaneSprite(sprite: planeSprite)
       ..position = _getRandomCornerPosition()
-      ..size = Vector2(50, 50)
+      ..size = Vector2(20, 20)
       ..flightNumber = 'Flight ${DateTime.now().millisecondsSinceEpoch % 1000}'
       ..height = 10000;
 
@@ -137,6 +138,7 @@ class TouchDispatchGame extends FlameGame {
   void removePlane(PlaneEntity plane) {
     bloc.add(RemovePlaneEvent(plane));
     plane.removeFromParent();
+
   }
 
   void pauseGame() => bloc.add(PauseGameEvent());

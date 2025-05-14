@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:touch_dispatch/pages/start_page/dynamic_backround/data/synthwave_colors.dart';
+import 'package:touch_dispatch/pages/start_menu_page/dynamic_backround/data/synthwave_colors.dart';
 
 
 class Label extends StatelessWidget {

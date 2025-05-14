@@ -2,7 +2,7 @@ import 'package:animated_flight_paths/animated_flight_paths.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:touch_dispatch/pages/start_page/dynamic_backround/data/synthwave_colors.dart';
+import 'package:touch_dispatch/pages/start_menu_page/dynamic_backround/data/synthwave_colors.dart';
 
 import 'data/flights.dart';
 

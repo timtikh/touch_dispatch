@@ -3,7 +3,7 @@ import 'package:touch_dispatch/pages/level_selection_menu/level_selection_menu.d
 
 import 'dynamic_backround/dynamic_background.dart'; // adjust if needed
 
-class MenuPage extends StatelessWidget {
+class StartMenuPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

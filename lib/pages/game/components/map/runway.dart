@@ -7,7 +7,7 @@ class Runway extends SpriteComponent with HasGameRef {
   Future<void> onLoad() async {
     super.onLoad(); // Ensure the component is properly initialized
     sprite = await gameRef.loadSprite('runway.png');
-    size = Vector2(200, 50);
+    size = Vector2(200, 20);
     position = gameRef.size / 2 - Vector2(100, 25); // Center the runway
   }
 
