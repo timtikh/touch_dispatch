@@ -62,20 +62,20 @@ class GameOverlay extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                         children: state.planes.map((plane) {
                           return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            padding: const EdgeInsets.symmetric(vertical: 2),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   plane.flightNumber,
-                                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
                                 ),
                                 ValueListenableBuilder<double>(
                                   valueListenable: plane.heightNotifier,
                                   builder: (_, height, __) {
                                     return Text(
                                       'Height: ${height.toStringAsFixed(0)} ft',
-                                      style: const TextStyle(color: Colors.white70, fontSize: 12),
+                                      style: const TextStyle(color: Colors.white70, fontSize: 11),
                                     );
                                   },
                                 ),
@@ -85,22 +85,22 @@ class GameOverlay extends StatelessWidget {
                                     return Row(
                                       children: [
                                         IconButton(
-                                          icon: const Icon(Icons.remove, size: 16),
+                                          icon: const Icon(Icons.remove, size: 14),
                                           color: Colors.white,
-                                          onPressed: () {
-                                            plane.orderedHeightNotifier.value -= 500;
-                                          },
+                                          padding: EdgeInsets.zero,
+                                          constraints: const BoxConstraints(),
+                                          onPressed: () => plane.orderedHeightNotifier.value -= 500,
                                         ),
                                         Text(
                                           'Ordered: ${orderedHeight.toStringAsFixed(0)} ft',
-                                          style: const TextStyle(color: Colors.white60, fontSize: 12),
+                                          style: const TextStyle(color: Colors.white60, fontSize: 11),
                                         ),
                                         IconButton(
-                                          icon: const Icon(Icons.add, size: 16),
+                                          icon: const Icon(Icons.add, size: 14),
                                           color: Colors.white,
-                                          onPressed: () {
-                                            plane.orderedHeightNotifier.value += 500;
-                                          },
+                                          padding: EdgeInsets.zero,
+                                          constraints: const BoxConstraints(),
+                                          onPressed: () => plane.orderedHeightNotifier.value += 500,
                                         ),
                                       ],
                                     );
@@ -109,9 +109,40 @@ class GameOverlay extends StatelessWidget {
                                 ValueListenableBuilder<double>(
                                   valueListenable: plane.orderedHeightNotifier,
                                   builder: (_, orderedHeight, __) {
-                                    return Text(
-                                      '${plane.flightNumber} maintaining ${orderedHeight.toStringAsFixed(0)}',
-                                      style: const TextStyle(color: Colors.blueAccent, fontSize: 12),
+                                    return Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          '${plane.flightNumber} maintaining ${orderedHeight.toStringAsFixed(0)}',
+                                          style: const TextStyle(color: Colors.blueAccent, fontSize: 11),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Wrap(
+                                          children: game.gameMap.points.map((point) {
+                                            return Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 2),
+                                              child: TextButton(
+                                                style: TextButton.styleFrom(
+                                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                                  minimumSize: Size.zero,
+                                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                                  backgroundColor: Colors.blueGrey,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(4),
+                                                  ),
+                                                ),
+                                                onPressed: () {
+                                                  plane.moveToPoint(point.position);
+                                                },
+                                                child: Text(
+                                                  point.nameText.text,
+                                                  style: const TextStyle(color: Colors.white, fontSize: 10),
+                                                ),
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ],
                                     );
                                   },
                                 ),
@@ -121,6 +152,7 @@ class GameOverlay extends StatelessWidget {
                           );
                         }).toList(),
                       );
+
                     },
                   ),
                 ),
