@@ -1,0 +1,2 @@
+/Users/timtikh/StudioProjects/touch_dispatch/android/app/.cxx/RelWithDebInfo/1jerm4n7/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/timtikh/StudioProjects/touch_dispatch/android/app/.cxx/RelWithDebInfo/1jerm4n7/armeabi-v7a/CMakeFiles/rebuild_cache.dir
