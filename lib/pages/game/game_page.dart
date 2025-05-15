@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flame/game.dart';
 import 'package:touch_dispatch/pages/game/state_managment/game_bloc.dart';
 import 'package:touch_dispatch/pages/game/state_managment/game_state.dart';
-import 'overlays/game_overlay.dart';
+import 'overlays/game_overlay/game_overlay.dart';
 import 'game_logic/touch_dispatch_game.dart';
 
 class GamePage extends StatelessWidget {
